@@ -38,7 +38,7 @@ class ImageAIController extends GetxController {
         var data = jsonDecode(response.body);
         uid = data['data']['uid'].toString();
         update();
-        imageTransform(uid: uid ?? "");
+        imageTransform(uid: uid ?? "", name: "img2anime", module: 'img2anime');
       }
       else {
         if(kDebugMode){
@@ -54,7 +54,7 @@ class ImageAIController extends GetxController {
   }
 
 
-  Future<void> imageTransform ({required String uid}) async {
+  Future<void> imageTransform ({required String uid, required String name, required String module, String modelName = "style1", String description = "", String controlModel = "0", String styleStrength = "11"}) async {
     try{
       var headers = {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -63,7 +63,7 @@ class ImageAIController extends GetxController {
       request.bodyFields = {
         'api_token': 'dbec22910a8645f214f2ae27e5206054',
         'uid': uid,
-        'jconfig': '{\n  "name":"img2anime",\n  "config":{\n    "module":"img2anime",\n    "module_params":{\n        "model_name":"style1",\n        "description":"",\n        "control_mode": 0,\n        "style_strength": 11\n    }\n  }\n}'
+        'jconfig': '{\n  "name":$name,\n  "config":{\n    "module":$module,\n    "module_params":{\n        "model_name":$modelName,\n        "description":$description,\n        "control_mode": $controlModel,\n        "style_strength": $styleStrength\n    }\n  }\n}'
       };
       request.headers.addAll(headers);
       var streamedResponse = await request.send();
